@@ -24,6 +24,11 @@ export default class TodoApp extends Component {
         console.log(todos.body)
         this.setState({ todos: todos.body })
     }
+    // handleDelete = async (id) => {
+    //     await request.delete(`https://mighty-garden-12963.herokuapp.com/api/todo/${id}`);
+
+      
+    // }
     
     render() {
      
@@ -49,6 +54,7 @@ export default class TodoApp extends Component {
                         const data = await request.put(`https://mighty-garden-12963.herokuapp.com/api/todos/${todo.id}`, matchingTodo);
                     }} key={todo.id}>
                         {todo.task}
+                        {/* <button onClick = { this.handleDelete() }>Delete</button> */}
                     </p>)
                 }
             </div>
