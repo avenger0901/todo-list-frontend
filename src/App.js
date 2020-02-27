@@ -10,8 +10,8 @@ import {
 
 
  const isLoggedIn = () => JSON.parse(localStorage.getItem('user'));
-
-function App() {
+ 
+ function App() {
   return (
     <div className="App">
        
