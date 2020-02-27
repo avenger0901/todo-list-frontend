@@ -1,42 +1,50 @@
 import React, { Component } from 'react'
 import request from 'superagent';
-
+import AddTodo from './AddToDo';
 
 export default class TodoApp extends Component {
-    state = { todos: [],
-              newTodo: ''
-    }
+    state = { todos: [] }
     componentDidMount = async() => {
+        const user = JSON.parse(localStorage.getItem('user'));
         const todos = await request.get('https://mighty-garden-12963.herokuapp.com/api/todos')
-        console.log(todos.body)
+        .set('Authorization', user.token);
         this.setState({ todos: todos.body })
     }
-    handleInputChange = (e) => {
-        this.setState({ newTodo: e.target.value })
-    }
-    handleSubmit = async (e) => {
-        e.preventDefault();
-        const addTodo = {
-            "task":this.state.newTodo
-        }
-       const postTodo = await request.post('https://mighty-garden-12963.herokuapp.com/api/todos',addTodo)
-       const todos = await request.get('https://mighty-garden-12963.herokuapp.com/api/todos')
-        console.log(todos.body)
-        this.setState({ todos: todos.body })
-    }
-    // handleDelete = async (id) => {
-    //     await request.delete(`https://mighty-garden-12963.herokuapp.com/api/todo/${id}`);
+    handleClick = async () => {
+        const newTodo = {
+            // math.random() is fine here because this is a fake todo
+            id: Math.random(),
+            task: this.state.todoInput,
+            complete: false,
+        };
 
-      
-    // }
-    
+        const user = JSON.parse(localStorage.getItem('user'));
+
+
+        const newTodos = [...this.state.todos, newTodo];
+
+        this.setState({ todos: newTodos });
+
+        const data = await request.post(`https://mighty-garden-12963.herokuapp.com/api/todos`, {
+
+            task: this.state.todoInput
+        })
+            .set('Authorization', user.token);
+    }
+    handleInput = (e) => {
+        this.setState({ todoInput: e.target.value })
+    }
     render() {
-     
+        console.log(this.state.todoInput)
+        if (localStorage.getItem('user')) {
         return (
             <div>
-                <input onChange={this.handleInputChange}>
-                </input>
-                <button onClick = {this.handleSubmit}>Submit</button>
+                <h3>Hello {JSON.parse(localStorage.getItem('user')).email}</h3>
+                <AddTodo 
+                todoInput={ this.state.todoInput } 
+                handleClick={ this.handleClick } 
+                handleInput={ this.handleInput } 
+            />
                 {
                     this.state.todos.map((todo) => <p 
                         style={{
@@ -49,15 +57,17 @@ export default class TodoApp extends Component {
                         const matchingTodo = newTodos.find((thisTodo) => todo.id === thisTodo.id);
 
                         matchingTodo.complete = !todo.complete
-                                 
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        
                         this.setState({ todos: newTodos });
-                        const data = await request.put(`https://mighty-garden-12963.herokuapp.com/api/todos/${todo.id}`, matchingTodo);
+                        const data = await request.put(`https://mighty-garden-12963.herokuapp.com/api/todos/${todo.id}`, matchingTodo)
+                        .set('Authorization', user.token);
                     }} key={todo.id}>
                         {todo.task}
-                        {/* <button onClick = { this.handleDelete() }>Delete</button> */}
                     </p>)
                 }
             </div>
-        )
+            )
+        }
     }
 }

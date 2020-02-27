@@ -8,6 +8,23 @@ export default class TodoLogin extends Component {
         passwordSignIn: '',
         passwordSignUp: '',
     }
+    handleSignIn = async () => {
+        const signIn = await request.post(`https://mighty-garden-12963.herokuapp.com/api/auth/signin`, {
+            email: this.state.usernameSignIn,
+            password: this.state.passwordSignIn,
+        })
+
+        localStorage.setItem('user', JSON.stringify(signIn.body));
+    }
+
+    handleSignUp = async () => {
+        const signUp = await request.post(`https://mighty-garden-12963.herokuapp.com/api/auth/signup`, {
+            email: this.state.usernameSignUp,
+            password: this.state.passwordSignUp,
+        })
+
+        localStorage.setItem('user', JSON.stringify(signUp.body));
+    }
     render() {
         return (
             <div>

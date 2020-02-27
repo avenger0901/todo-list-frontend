@@ -19,15 +19,15 @@ function App() {
             my header
         </header>
         <BrowserRouter>
-            <Switch>
+           
             <Route path='/' render={() => 
                 isLoggedIn() 
                     ? <TodoApp />
-                    : <Redirect to='login' />
+                    : <Redirect to='/login' />
                 }/>
                  <Route path='/login' component={TodoLogin} />
                 {/* <Route exact path="/" component={ TodoApp }/> */}
-            </Switch>
+         
         </BrowserRouter>
 
     </div>
