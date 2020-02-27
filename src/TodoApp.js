@@ -34,6 +34,15 @@ export default class TodoApp extends Component {
     handleInput = (e) => {
         this.setState({ todoInput: e.target.value })
     }
+    handleDelete = async (todo) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        await request.delete(`https://mighty-garden-12963.herokuapp.com/api/todos/${todo.id}`)
+        .set('Authorization', user.token);
+        const todos = await request.get('https://mighty-garden-12963.herokuapp.com/api/todos')
+        .set('Authorization', user.token);
+        this.setState({ todos: todos.body })
+    }
     render() {
         console.log(this.state.todoInput)
         if (localStorage.getItem('user')) {
@@ -64,6 +73,7 @@ export default class TodoApp extends Component {
                         .set('Authorization', user.token);
                     }} key={todo.id}>
                         {todo.task}
+                        <button onClick= {() => this.handleDelete(todo)} >Delete</button>
                     </p>)
                 }
             </div>

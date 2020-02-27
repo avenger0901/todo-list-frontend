@@ -6,7 +6,6 @@ import {
     BrowserRouter, 
     Route, 
     Redirect,
-    Router
  } from 'react-router-dom';
 
 
@@ -16,23 +15,19 @@ function App() {
   return (
     <div className="App">
        
-        <header>
-            my header
-        </header>
+        <h1>
+           What do you want to complish today?
+        </h1>
        
         <BrowserRouter>
-           
             <Route exact path='/' render={() => 
                 isLoggedIn() 
                     ? <TodoApp />
                     : <Redirect to='/login' />
                 }/>
                  <Route exact path='/login' component={TodoLogin} />
-                {/* <Route exact path="/" component={ TodoApp }/> */}
-         
         </BrowserRouter>
       
-
     </div>
   );
 }
